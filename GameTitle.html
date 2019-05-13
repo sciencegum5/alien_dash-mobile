@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alien Dash</title>
+    <link rel="icon" href="./media/chicken.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+  font-size: 17px;
+}
+
+#startVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+}
+
+.content {
+  position: fixed;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  padding: 20px;
+}
+
+#startButton {
+  width: 200px;
+  font-size: 18px;
+  padding: 10px;
+  border: none;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+#startButton:hover {
+  background: #ddd;
+  color: black;
+}
+</style>
+</head>
+<body>
+
+<video autoplay muted loop id="startVideo">
+  <source src="media/demo.mp4" type="video/mp4">
+  Your browser does not support HTML5 video n00b.
+</video>
+<audio autoplay loop >
+    <source src="media/soundtrack.mp3" type="audio/mpeg">
+    Your browser does not support HTML5 audio n00b.
+    </audio>
+
+<div class="content">
+  <h1>Welcome To Alien Dash</h1>
+  <h3>Earth is in trouble! An asteroid field is approaching rapidly and will destroy the planet!
+    Earth has sent a probe to gather data on the asteroids but it's communications array has been damaged! Your mission is to dock with the probe for as long as possible and gather as much data as you can! You'll have one minute to get the data and get out!
+    [Use the A and D keys to move your craft left and right, press the SPACEBAR to boost your craft, and press P to pause the visual in the background ]
+  </h3>
+  <button id="startButton" onclick="myFunction()">⏸ Pause video</button>
+  <button id="startButton" onclick="location.href='./gravityDemo.html';"> Let's Go!</button>
+</div>
+
+<script>
+var startVideo = document.getElementById("startVideo");
+var btn = document.getElementById("startButton");
+
+function myFunction() {
+  if (startVideo.paused) {
+    startVideo.play();
+    btn.innerHTML = "⏸ Pause video";
+  } else {
+    startVideo.pause();
+    btn.innerHTML = "▶️ Play video";
+  }
+}
+</script>
+
+</body>
+</html>

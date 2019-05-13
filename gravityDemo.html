@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="./media/chicken.png">
+    <title>Alien Dash</title>
+    <!--Makes a nice title on the tab-->
+    <script src="p5/p5.min.js"></script>
+    <script src="p5/p5.collide2d.min.js"></script>
+    <script src="p5/p5.sound.js"></script>
+    <script src="barrier.js"></script>
+    <script src="jumper.js"></script>
+    <script src="platform.js"></script>
+    <script src="ground.js"></script>
+    <!--references the page to the p5 library-->
+    <style>
+        body {
+            overflow: hidden;
+            /*keeps scroll bars from appearing*/
+            padding: 0;
+            /*ensures no gaps appearon page around edges*/
+            margin: 0;
+            /*ensures no gaps appearon page around edges*/
+            
+color: #000;
+text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #00ddffb7, 0 0 7px #00ddffb7, 0 0 8px #00ddffb7, 0 0 10px #00ddffb7, 0 0 15px #00ddffb7;
+
+        }
+
+
+        /* Style the video: 100% width and height to cover the entire window */
+        #myVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+        .loadingScreen {
+            top: 50%;
+            left: 50%;
+        }
+        /* Add some content at the bottom of the video/page */
+        .content {
+            z-index: -1;
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            padding: 20px;
+        }
+
+        h2 {
+            display: inline;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- The video -->
+    <video autoplay muted loop id="myVideo">
+        <source src="media/space.mp4" type="video/mp4">
+    </video>
+    <script>
+        //we could refer to an external js file but i would like to keep it all on one simple file
+        var userSpeed = 8; //sensitivity of movement for player
+        var w = window.innerWidth; //defines window size
+        var h = window.innerHeight; //defines window sized
+        var ground = new ground();
+        var ball = new ball(); //global object is created here
+        var barrier = new barrier();
+        var platform = new platform();
+        var r; //Random color values (left blank for definition in the function)
+        var g; //Random color values (left blank for definition in the function)
+        var b; //Random color values (left blank for definition in the function)
+        var ship;
+        var sat;
+        var rock;
+        var ts = 48;
+        var hit = false;
+        var score = 0;
+        var highScoreCombo = 0;
+        var video = document.getElementById("myVideo");
+        var myVar;
+        var yes;
+        var soundTrack;
+        var scoreTrack;
+        var damageTrack;
+        var Tick;
+        function preload() {
+            ship = loadImage("media/chicken.png");
+            sat = loadImage("media/satellite.png");
+            rock = loadImage("media/rock.png");
+            soundTrack =  loadSound("media/soundtrack.mp3");//zack reccomended a new tracvk xd
+            scoreTrack =  loadSound("media/score.wav");
+            damageTrack = loadSound("media/boom.mp3");
+            Tick = loadSound("media/Tick.mp3");
+        }
+
+        function setup() { //runs once at startup
+             myVar = setInterval(myTimer, 1000);
+            console.log("sat location " + platform.x + " , " + platform.y);
+            console.log("map size " + w + " , " + h); 
+            createCanvas(w, h); //creates area as big as window
+            //background(0); //makes a black background
+            ship.loadPixels();
+            r = random(256); //random color selection
+            g = random(256); //random color selection
+            b = random(256); //random color selection
+            soundTrack.loop();
+        soundTrack.play();
+        }
+
+        function draw() { //runs at 60Hz
+            clear();
+            barrier.show();
+            barrier.update();
+            ball.update();
+            ball.show(); //makes the ball appear by calling the function  in the object
+            ball.move();
+            platform.show();
+            ground.show();
+            
+            hit = collideRectCircle(barrier.x, barrier.y, barrier.width, barrier.height, ball.x, ball.y, 5);
+            if (hit == true) {
+                //noLoop();
+                damageTrack.play();
+                console.log("barrier hit detected!");
+                if (barrier.dodgeCount > highScoreCombo) {
+                    highScoreCombo = barrier.dodgeCount;
+                }
+                barrier.dodgeCount = 0;
+
+            }
+            hit = collideRectCircle(platform.x, platform.y, platform.width, platform.height, ball.x, ball.y, 5);
+            if (hit == true) {
+                Tick.play();
+                //scoreTrack.play(); //this is annoying as hell 
+                ball.velocity = -6;
+                console.log("platform hit detected!");
+                r = random(256); //random color selection
+                g = random(256); //random color selection
+                b = random(256); //random color selection
+                platform.hit++;
+
+            }
+            hit = collideRectCircle(ground.x, ground.y, ground.width, ground.height, ball.x, ball.y, 50);
+            if (hit == true) {
+                ball.velocity = -5;
+                console.log("ground hit detected!");
+
+
+            } 
+            document.getElementById('coo').innerHTML = "Asteroids dodged: [" + barrier.dodgeCount + "] " + "Data gathered: [" +
+                platform.hit + "kB] " + "score: [" + score + "] " + "Time: [" + timer + "] " + "Framerate: [" + Math.floor(
+                    frameRate()) + "]";
+        }
+        var timer = 61;
+        
+
+        function myTimer() {
+            if (timer > 0) {
+                --timer;
+                //document.getElementById("demo").innerHTML = "Time: [" + timer + "]";
+
+            } else {
+                clearInterval(myVar);
+                localStorage.setItem('barrierCount', highScoreCombo);
+                localStorage.setItem('score', score);
+                location.href = "GameOver.html";
+            }
+        }
+
+
+        function keyPressed() {
+            if (keyCode === 32) {
+                ball.up();
+                console.log("spacebar pressed");
+            }
+            if (keyCode === 80) {
+                if (video.paused) {
+                    video.play();
+                    console.log("video resumed");
+                } else {
+                    video.pause();
+                    console.log("video paused");
+                }
+                
+            }
+        }
+    </script>
+    <h2 id="coo" class="content"></h2>
+    <!--made an element to display coordinates-->
+    <h1 id="p5_loading" class="loadingScreen">Loading... this may take a minute on first load</h1>
+</body>
+
+</html>
