@@ -8,7 +8,7 @@
 <!-- versionCode is optional and Android only -->
 
   <name short="Alien Dash Alpha">Alien Dash!</name>
-    <icon href="./media/chicken.png"> </icon>
+    <icon src="./media/chicken.png"/> 
   <description>
       A game in which you help a spaceship collect data!.
   </description>
