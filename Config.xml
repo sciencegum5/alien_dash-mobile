@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+    xmlns:gap   = "https://github.com/sciencegum5/sciencegum5.github.io"
+    id          = "aliendash.isaacguzzo.pro"
+    versionCode = "0"
+    version     = "0.0.2" >
+
+<!-- versionCode is optional and Android only -->
+
+  <name short="Alien Dash Alpha">Alien Dash!</name>
+    <icon href="./media/chicken.png">
+  <description>
+      A game in which you help a spaceship collect data!.
+  </description>
+
+  <author href="https://isaacguzzo.pro" email="sciencegum5@gmail.com">
+      Isaac Guzzo
+  </author>
+
+</widget>
